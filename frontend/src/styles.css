@@ -127,7 +127,7 @@ button:disabled {
 .provider-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin-top: 14px;
 }
 

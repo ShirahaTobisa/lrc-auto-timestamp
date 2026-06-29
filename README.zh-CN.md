@@ -7,6 +7,7 @@
 - 本地网页工具骨架已实现。
 - 后端支持歌词解析、ffmpeg 转换、本地 `faster-whisper` 转写、可选 OpenAI-compatible 转写服务、歌词对齐、结果调整和 LRC 导出。
 - 前端支持上传音频、粘贴/读取歌词、查看任务进度、逐行编辑、单行试听、翻译行处理和导出。
+- 歌词模式支持 `align` 和 `generate`：有歌词时对齐已有歌词；没有歌词时用 Whisper 转写结果生成 LRC 草稿。
 
 ## 环境要求
 
@@ -79,6 +80,7 @@ cd project\lrc-auto-timestamp
 - 空行会被忽略。
 - 明显的翻译行会保留，但不作为自动对齐锚点。
 - 演唱行按顺序匹配转写片段；低置信度或估算行会被标记，方便人工检查。
+- `generate` 模式不需要输入歌词，会直接把转写片段变成可编辑 LRC 行。
 - 如果云端 provider 只返回整段 transcript、没有词级或片段级时间，相关行会被标成 `estimated/low_confidence`。
 - 导出模式：
   - `follow vocal`：翻译行沿用上一条演唱行时间。

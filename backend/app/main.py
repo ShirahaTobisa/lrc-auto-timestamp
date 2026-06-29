@@ -35,7 +35,7 @@ def health() -> dict[str, str]:
 def create_job(
     background_tasks: BackgroundTasks,
     audio: UploadFile = File(...),
-    lyrics: str = Form(...),
+    lyrics: str = Form(""),
     model_size: str = Form("small"),
     whisper_device: str = Form("auto"),
     whisper_compute_type: str = Form("auto"),

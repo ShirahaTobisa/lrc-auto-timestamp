@@ -11,6 +11,7 @@ const NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1";
 export function App() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [lyrics, setLyrics] = useState("");
+  const [lyricMode, setLyricMode] = useState<"align" | "generate">("align");
   const [modelSize, setModelSize] = useState("small");
   const [whisperDevice, setWhisperDevice] = useState("auto");
   const [whisperComputeType, setWhisperComputeType] = useState("auto");
@@ -30,7 +31,7 @@ export function App() {
   const audioUrl = useMemo(() => (audioFile ? URL.createObjectURL(audioFile) : ""), [audioFile]);
   const canStart = Boolean(
     audioFile &&
-      lyrics.trim() &&
+      (lyricMode === "generate" || lyrics.trim()) &&
       !isBusy &&
       (engine === "local" || (engine === "nvidia" && nvidiaApiKey.trim()) || (engine === "compatible" && providerBaseUrl.trim() && providerApiKey.trim() && providerModel.trim()))
   );
@@ -50,7 +51,7 @@ export function App() {
     try {
       const jobId = await createJob({
         audio: audioFile,
-        lyrics,
+        lyrics: lyricMode === "generate" ? "" : lyrics,
         modelSize,
         whisperDevice,
         whisperComputeType,
@@ -173,6 +174,13 @@ export function App() {
                   <option value="local">local</option>
                   <option value="nvidia">NVIDIA Whisper (transcript)</option>
                   <option value="compatible">compatible API</option>
+                </select>
+              </label>
+              <label>
+                Lyrics
+                <select value={lyricMode} onChange={(event) => setLyricMode(event.target.value as "align" | "generate")}>
+                  <option value="align">align</option>
+                  <option value="generate">generate</option>
                 </select>
               </label>
               <label>

@@ -7,6 +7,7 @@ A local-only source project for generating line-level LRC timestamps from an aud
 - Local web app scaffold implemented.
 - Backend supports lyric parsing, ffmpeg conversion, local `faster-whisper` transcription, optional OpenAI-compatible transcription providers, alignment, adjustment, and LRC export.
 - Frontend supports audio upload, lyric paste/file load, job progress, line editing, per-line playback, translation handling, and export.
+- Lyrics mode supports `align` and `generate`: align existing lyrics, or generate an editable LRC draft directly from Whisper output.
 
 ## Requirements
 
@@ -79,6 +80,7 @@ The probe asks for the API key using hidden input and tests NVIDIA's Riva gRPC e
 - Empty lines are ignored.
 - Obvious translation lines are preserved but not used as alignment anchors.
 - Vocal lines are matched against transcript segments in order, with low-confidence and estimated rows marked for review.
+- `generate` mode does not require lyrics input and converts transcript segments into editable LRC rows.
 - If a cloud provider only returns a plain transcript without segment or word timing, matching rows are marked `estimated/low_confidence`.
 - Export modes:
   - `follow vocal`: translation lines reuse the previous vocal timestamp.

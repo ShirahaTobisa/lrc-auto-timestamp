@@ -55,6 +55,21 @@ class JobStore:
         return [asdict(line) for line in job.result]
 
 
+def transcript_to_aligned_lines(transcript) -> list[AlignedLine]:
+    return [
+        AlignedLine(
+            index=index,
+            text=segment.text,
+            line_type="vocal",
+            start_ms=segment.start_ms,
+            confidence=0.75 if segment.end_ms > segment.start_ms else 0.25,
+            warnings=[] if segment.end_ms > segment.start_ms else ["estimated", "low_confidence"],
+        )
+        for index, segment in enumerate(transcript)
+        if segment.text.strip()
+    ]
+
+
 def run_alignment_job(
     job: Job,
     *,
@@ -73,10 +88,8 @@ def run_alignment_job(
 
         job.status = "processing"
         job.progress = 0.1
-        job.message = "Parsing lyrics"
-        lyrics = parse_lyrics(lyrics_text)
-        if not lyrics:
-            raise RuntimeError("No lyric lines found.")
+        job.message = "Preparing lyrics"
+        lyrics = parse_lyrics(lyrics_text) if lyrics_text.strip() else []
 
         wav_path = job.work_dir / "audio.wav"
         job.progress = 0.25
@@ -97,8 +110,14 @@ def run_alignment_job(
             transcript = transcribe_local(wav_path, model_size=model_size, device=whisper_device, compute_type=whisper_compute_type)
 
         job.progress = 0.8
-        job.message = "Aligning lyrics"
-        job.result = align_lyrics(lyrics, transcript)
+        if lyrics:
+            job.message = "Aligning lyrics"
+            job.result = align_lyrics(lyrics, transcript)
+        else:
+            job.message = "Generating lyrics"
+            job.result = transcript_to_aligned_lines(transcript)
+            if not job.result:
+                raise RuntimeError("No transcript lines were generated.")
         job.progress = 1.0
         job.status = "done"
         job.message = "Done"
