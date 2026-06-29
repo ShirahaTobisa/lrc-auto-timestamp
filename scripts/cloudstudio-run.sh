@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
+FRONTEND_PORT="${PORT:-5173}"
 
 if command -v apt-get >/dev/null 2>&1 && ! command -v ffmpeg >/dev/null 2>&1; then
   sudo apt-get update
@@ -36,5 +37,4 @@ trap cleanup EXIT
 BACKEND_PID="$!"
 
 cd frontend
-npm run dev -- --host 0.0.0.0 --port 5173
-
+npm run dev -- --host 0.0.0.0 --port "$FRONTEND_PORT"
