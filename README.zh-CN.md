@@ -80,8 +80,13 @@ cd project\lrc-auto-timestamp
 - 空行会被忽略。
 - 明显的翻译行会保留，但不作为自动对齐锚点。
 - 演唱行按顺序匹配转写片段；低置信度或估算行会被标记，方便人工检查。
+- 本地 `faster-whisper` 会启用 `word_timestamps=True`，有词级时间时优先按词窗口给歌词行找起点。
 - `generate` 模式不需要输入歌词，会直接把转写片段变成可编辑 LRC 行。
 - 如果云端 provider 只返回整段 transcript、没有词级或片段级时间，相关行会被标成 `estimated/low_confidence`。
+
+## 常见错误
+
+`[json.exception.parse_error.101]` 通常表示 faster-whisper/CTranslate2 读到了空的或损坏的模型 JSON 文件，常见原因是模型下载中断。删除对应模型缓存目录后重新运行即可。
 - 导出模式：
   - `follow vocal`：翻译行沿用上一条演唱行时间。
   - `plain`：翻译行不加时间戳。

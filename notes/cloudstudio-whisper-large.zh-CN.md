@@ -38,6 +38,8 @@ Device: cuda
 Compute: int8_float16
 ```
 
+打轴质量优先依赖词级时间戳。本项目本地模式会启用 faster-whisper 的 `word_timestamps=True`，再用词时间窗口匹配已有歌词行。
+
 计算单元不用写进仓库配置，直接在 CloudStudio 顶部下拉选择。
 
 如果报 CUDA/cuDNN/CUBLAS 相关错误，先改：
@@ -49,6 +51,8 @@ Compute: int8
 ```
 
 确认流程通了，再修 GPU 依赖。
+
+如果看到 `[json.exception.parse_error.101]`，通常是模型缓存下载坏了。删除对应 Hugging Face/CTranslate2 模型缓存后重新运行。
 
 ## 验证 GPU
 

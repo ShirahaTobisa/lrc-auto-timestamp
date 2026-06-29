@@ -21,6 +21,14 @@ class TranscriptSegment:
     start_ms: int
     end_ms: int
     text: str
+    words: list["TranscriptWord"] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class TranscriptWord:
+    start_ms: int
+    end_ms: int
+    word: str
 
 
 @dataclass(slots=True)
@@ -31,4 +39,3 @@ class AlignedLine:
     start_ms: int | None
     confidence: float
     warnings: list[WarningCode] = field(default_factory=list)
-

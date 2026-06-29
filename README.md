@@ -80,8 +80,13 @@ The probe asks for the API key using hidden input and tests NVIDIA's Riva gRPC e
 - Empty lines are ignored.
 - Obvious translation lines are preserved but not used as alignment anchors.
 - Vocal lines are matched against transcript segments in order, with low-confidence and estimated rows marked for review.
+- Local `faster-whisper` uses `word_timestamps=True`; when word timing is available, lyric line starts are matched against word-level timing first.
 - `generate` mode does not require lyrics input and converts transcript segments into editable LRC rows.
 - If a cloud provider only returns a plain transcript without segment or word timing, matching rows are marked `estimated/low_confidence`.
+
+## Common Errors
+
+`[json.exception.parse_error.101]` usually means faster-whisper/CTranslate2 read an empty or corrupted model JSON file, often after an interrupted model download. Delete the cached model directory for that model and run again.
 - Export modes:
   - `follow vocal`: translation lines reuse the previous vocal timestamp.
   - `plain`: translation lines are exported without timestamps.

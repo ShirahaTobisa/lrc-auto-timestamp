@@ -5,7 +5,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
-from .models import TranscriptSegment
+from .models import TranscriptSegment, TranscriptWord
 
 
 @dataclass(slots=True)
@@ -46,17 +46,39 @@ def transcribe_local(audio_path: Path, model_size: str = "small", device: str | 
     except ImportError as exc:
         raise RuntimeError("faster-whisper is not installed. Run pip install -r backend/requirements.txt.") from exc
 
-    model = WhisperModel(model_size, device=device or os.getenv("WHISPER_DEVICE", "auto"), compute_type=compute_type or os.getenv("WHISPER_COMPUTE_TYPE", "auto"))
-    segments, _info = model.transcribe(str(audio_path), vad_filter=True, word_timestamps=False)
-    return [
-        TranscriptSegment(
-            start_ms=int(segment.start * 1000),
-            end_ms=int(segment.end * 1000),
-            text=segment.text.strip(),
-        )
-        for segment in segments
-        if segment.text.strip()
-    ]
+    try:
+        model = WhisperModel(model_size, device=device or os.getenv("WHISPER_DEVICE", "auto"), compute_type=compute_type or os.getenv("WHISPER_COMPUTE_TYPE", "auto"))
+        segments, _info = model.transcribe(str(audio_path), vad_filter=True, word_timestamps=True)
+        parsed = []
+        for segment in segments:
+            text = segment.text.strip()
+            if not text:
+                continue
+            words = [
+                TranscriptWord(
+                    start_ms=int(word.start * 1000),
+                    end_ms=int(word.end * 1000),
+                    word=word.word.strip(),
+                )
+                for word in (segment.words or [])
+                if word.word and word.word.strip() and word.start is not None and word.end is not None
+            ]
+            parsed.append(
+                TranscriptSegment(
+                    start_ms=int(segment.start * 1000),
+                    end_ms=int(segment.end * 1000),
+                    text=text,
+                    words=words,
+                )
+            )
+        return parsed
+    except RuntimeError as exc:
+        message = str(exc)
+        if "json.exception.parse_error.101" in message or "unexpected end of input" in message:
+            raise RuntimeError(
+                "Whisper model cache appears corrupted or partially downloaded. Delete the cached model directory for this model and run again."
+            ) from exc
+        raise
 
 
 def transcribe_compatible(audio_path: Path, config: CompatibleProviderConfig) -> list[TranscriptSegment]:
