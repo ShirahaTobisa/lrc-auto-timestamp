@@ -52,6 +52,8 @@ Then open `http://127.0.0.1:5173`.
 
 On Windows, `.\scripts\start-dev.ps1` opens both services in separate PowerShell windows.
 
+After importing into CloudStudio, use the top Run button. `.vscode/preview.yml` calls `scripts/cloudstudio-run.sh` to start both backend and frontend; compute unit selection stays in the CloudStudio UI.
+
 ## Local Privacy Model
 
 - The default `local` engine does not upload audio or lyrics.

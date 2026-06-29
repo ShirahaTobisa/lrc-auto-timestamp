@@ -52,6 +52,8 @@ cd project\lrc-auto-timestamp
 
 Windows 下也可以运行 `.\scripts\start-dev.ps1`，它会分别打开后端和前端窗口。
 
+CloudStudio 导入仓库后可以直接点顶部“运行”。仓库里的 `.vscode/preview.yml` 会调用 `scripts/cloudstudio-run.sh`，自动启动后端和前端；计算单元在 CloudStudio UI 里选择。
+
 ## 本地隐私边界
 
 - 默认 `local` 引擎不会上传音频或歌词。

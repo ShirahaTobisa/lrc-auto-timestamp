@@ -1,0 +1,11 @@
+# CloudStudio calls this file when the Run button is clicked.
+# Compute unit/GPU selection is controlled by the CloudStudio UI, not this repo.
+autoOpen: true
+apps:
+  - port: 5173
+    run: bash scripts/cloudstudio-run.sh
+    root: /
+    name: lrc-auto-timestamp
+    description: Local web app for generating editable LRC timestamps
+    autoOpen: true
+
