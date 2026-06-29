@@ -1,0 +1,8 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+pydantic>=2.8.0
+faster-whisper>=1.0.0
+openai>=1.50.0
+nvidia-riva-client>=2.19.0
+pytest>=8.0.0

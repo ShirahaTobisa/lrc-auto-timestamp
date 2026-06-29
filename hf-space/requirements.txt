@@ -1,0 +1,6 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch
+torchaudio
+gradio>=4.44.0
+whisperx
+
