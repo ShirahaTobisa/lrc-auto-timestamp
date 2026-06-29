@@ -4,7 +4,7 @@ autoOpen: true
 apps:
   - port: 5173
     run: cd /workspace && bash scripts/cloudstudio-run.sh
-    root: /workspace
+    root: /
     name: lrc-auto-timestamp
     description: Local web app for generating editable LRC timestamps
     autoOpen: true
